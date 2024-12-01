@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Event Booking page - Welcome and choose an Event</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to our Event Booking App</h1>
+</header>
+<main>
+    <h2>Search an event:</h2>
+    <form th:method="GET" th:action="@{'/events'}">
+        <label for="search">By Event Name:</label>
+        <input type="text" name="searchName" id="search" placeholder="Search an event">
+        <br/>
+        <label for="minRating">By Minimum Event Rating (0.00 - 10.00): </label>
+        <input type="number" name="minRating" step="0.1" id="minRating" min="0" max="10" placeholder="Min Rating">
+        <br/>
+        <input type="submit" value="Submit">
+    </form>
+    <h2>Choose an event:</h2>
+    <!-- Display radio buttons for each event,
+            the value should be the event name
+            and the displayed text should be Name: <event_name>, Description: <event_description>, Rating: <popularity_score> -->
+    <form th:method="POST" th:action="@{'/events/placeBooking'}">
+        <th:block th:each="event : ${eventList}">
+            <input type="radio" name="eventId"
+                   th:value="${event.getId()}"
+                   th:text="'Id: ' + ${event.getId()} + '   Name: ' + ${event.getName()} + '    Description: '
+                   + ${event.getDescription()} + '  Rating: ' + ${event.getPopularityScore()} +
+                    '   Location: ' +${event.getLocation().getName()} ">
+            <br>
+            <td class="text-right">
+                <th:block>
+
+                    <a th:href="@{'/events/delete/{id}' (id=${event.getId()})}">
+                        <i class="fa fa-trash">Delete</i>
+                    </a>
+
+                </th:block>
+                <th:block>
+                    <a th:href="@{'/events/edit-form/{id}' (id=${event.getId()})}"
+                       class="btn btn-sm btn-info edit-product">
+                        <i class="fa fa-trash">Edit</i>
+                    </a>
+                </th:block>
+
+
+            </td>
+            <br>
+
+        </th:block>
+
+    <h2>Choose number of tickets:</h2>
+    <input type="number" name="numTickets" min="1" max="10"><br/>
+    <br/>
+    <input type="submit" value="Submit">
+    </form>
+    <a th:href="@{'/events/add-form'}" class="btn btn-block btn-dark add-product-btn">
+        Add new product
+    </a>
+
+</main>
+</body>
+</html>
